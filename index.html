@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8" />
+  <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>Адвокат Федорцова Диана Сергеевна</title>
 
-  <!-- ВАЖНО: описание делаем коротким.
-       Перенос строки через &#10;: может сработать в Telegram, но не гарантируется -->
   <meta name="description" content="Квалифицированная юридическая помощь.&#10;Тел.: +375 44 739-60-10" />
 
   <link rel="canonical" href="https://fedortsova-diana.github.io/Advokav/" />
@@ -17,16 +15,9 @@
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="ru_RU" />
   <meta property="og:url" content="https://fedortsova-diana.github.io/Advokav/" />
-
-  <!-- Пункт (2): вместо домена (где поддерживается) будет показываться имя/бренд -->
   <meta property="og:site_name" content="Адвокат Федорцова Диана Сергеевна" />
-
-  <!-- Пункт (3): "юридическая помощь" кладём в заголовок, потому что его почти всегда показывают -->
   <meta property="og:title" content="Квалифицированная юридическая помощь.&#10;Тел.: +375 44 739-60-10" />
-
-  <!-- Пункт (1): пробуем перенос строки перед Тел. -->
   <meta property="og:description" content="Адвокат Федорцова Диана Сергеевна" />
-
   <meta property="og:image" content="https://fedortsova-diana.github.io/Advokav/preview.jpg" />
   <meta property="og:image:secure_url" content="https://fedortsova-diana.github.io/Advokav/preview.jpg" />
   <meta property="og:image:type" content="image/jpeg" />
@@ -34,7 +25,7 @@
   <meta property="og:image:height" content="630" />
   <meta property="og:image:alt" content="Адвокат Федорцова Диана Сергеевна" />
 
-  <!-- Twitter (часть мессенджеров ориентируется и на них) -->
+  <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="Адвокат Федорцова Диана Сергеевна" />
   <meta name="twitter:description" content="Квалифицированная юридическая помощь. Тел.: +375 44 739-60-10" />
@@ -134,8 +125,6 @@
       display:flex;
       flex-direction:column;
       align-items:center;
-
-      /* было больше — теперь меньше, чтобы поднять весь блок ниже ближе к "АДВОКАТ" */
       margin: 0 0 30px;
     }
 
@@ -179,13 +168,11 @@
       align-items: start;
     }
 
-    /* ФИО — подняли ближе к "АДВОКАТ" */
     .hero-head{
       grid-area: head;
-      padding-top: 18px; /* было 34px */
+      padding-top: 18px;
     }
 
-    /* ФИО чуть мельче */
     .name-last{
       font-size: clamp(28px, 6.6vw, 38px);
       font-weight: 700;
@@ -208,15 +195,10 @@
       grid-area: photo;
       justify-self: end;
       align-self: start;
-
-      /* подняли фото */
       padding-top: 0;
-
-      /* тянем до правого края */
       margin-right: calc(-1 * var(--padX));
     }
 
-    /* Фото без эффектов */
     .photo-wrap img{
       width: 100%;
       height: auto;
@@ -232,9 +214,7 @@
       display:flex;
       flex-direction:column;
       gap: 12px;
-
-      /* подняли контакты ближе к ФИО */
-      margin-top: 28px; /* было 40px */
+      margin-top: 28px;
       min-width: 0;
     }
 
@@ -309,24 +289,52 @@
       margin: 8px 0;
     }
 
-    @media (max-width: 380px){
+    /* ====== ВАЖНОЕ ИЗМЕНЕНИЕ ДЛЯ "СРЕДНЕГО" МАСШТАБА (мобильные) ======
+       На узких ширинах делаем фото "декором": absolute.
+       Тогда фото не растягивает сетку и не уводит контакты вниз.
+    */
+    @media (max-width: 420px){
       .hero-grid{
         grid-template-columns: 1fr;
         grid-template-areas:
           "head"
-          "photo"
           "left"
           "wide";
+        position: relative;
+
+        /* место справа под фото (уменьшайте, если хотите больше наложения текста на фото) */
+        padding-right: clamp(140px, 44vw, 220px);
       }
+
       .photo-wrap{
-        justify-self: end;
-        max-width: 280px;
-        margin-right: calc(-1 * var(--padX));
+        position: absolute;
+        right: calc(-1 * var(--padX));
+        top: 6px;
+        width: clamp(140px, 44vw, 220px);
+        margin: 0;
+        padding: 0;
+        z-index: 0;          /* фото под текстом */
+        pointer-events: none;
       }
+
+      .photo-wrap img{
+        width: 100%;
+        height: auto;
+        max-height: 52vh;     /* чтобы фото не "съедало" экран по высоте на увеличенном масштабе */
+        object-fit: contain;
+      }
+
+      .hero-head, .contacts-left, .contacts-wide{
+        position: relative;
+        z-index: 1;          /* текст над фото */
+      }
+
       .contact-item.oneline .contact-text,
       .contact-item.phone .contact-text{
-        white-space: normal;
+        white-space: normal; /* на маленьких ширинах лучше разрешить переносы */
       }
+
+      .contacts-left{ margin-top: 18px; }
     }
 
     /* ДЕСКТОП: аккуратная карточка */
@@ -368,6 +376,15 @@
       .hero-grid{
         grid-template-columns: minmax(0,1fr) 300px;
         column-gap: 18px;
+        padding-right: 0; /* на десктопе не нужно */
+      }
+
+      .photo-wrap{
+        position: static;
+        width: auto;
+        z-index: 1;
+        pointer-events: auto;
+        margin-right: calc(-1 * var(--padX));
       }
     }
   </style>
@@ -435,7 +452,6 @@
 
               <div class="contact-divider"></div>
 
-              <!-- 1) Страница: адрес на 2-й строке -->
               <a href="https://brka.by/lawyers/fedortsova-diana-sergeevna/" target="_blank" rel="noopener" class="contact-item">
                 <div class="contact-icon">
                   <svg viewBox="0 0 24 24"><path d="M12 1L3 5v2h18V5L12 1zM5 9v8H3v2h18v-2h-2V9h-2v8h-2V9h-2v8h-2V9H5z"/></svg>
@@ -446,7 +462,6 @@
                 </span>
               </a>
 
-              <!-- 2) Канал: адрес на 2-й строке -->
               <a href="https://t.me/advocat_fedortsova" target="_blank" rel="noopener" class="contact-item">
                 <div class="contact-icon">
                   <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8l-1.7 8c-.12.54-.44.67-.88.42l-2.44-1.8-1.18 1.13c-.13.13-.24.24-.49.24l.17-2.5 4.5-4.07c.2-.17-.04-.27-.3-.1L7.74 14.6l-2.4-.75c-.52-.16-.53-.52.11-.77l9.4-3.62c.43-.16.81.1.79.74z"/></svg>
